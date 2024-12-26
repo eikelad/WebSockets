@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bate-papo WebSocket</title>
+    <link rel="stylesheet" href="styles.css">
+
+    
+</head>
+<body>
+    <h1>Bate-papo com WebSockets</h1>
+    <div id="messages"></div>
+    <input type="text" id="message" placeholder="Digite sua mensagem..." />
+    <button onclick="sendMessage()">Enviar</button>
+
+    <script>
+        const messagesDiv = document.getElementById('messages');
+        const inputMessage = document.getElementById('message');
+
+        
+        const socket = new WebSocket('ws://localhost:8080');
+
+        
+        socket.onopen = () => {
+            addMessage('Conectado ao servidor WebSocket');
+        };
+
+        
+        socket.onmessage = (event) => {
+            addMessage(event.data);
+        };
+
+       a
+        socket.onclose = () => {
+            addMessage('Conexão encerrada');
+        };
+
+        
+        socket.onerror = (error) => {
+            addMessage(`Erro: ${error.message}`);
+        };
+
+        
+        function sendMessage() {
+            const message = inputMessage.value;
+            if (message) {
+                socket.send(message);
+                inputMessage.value = '';
+            }
+        }
+
+        
+        function addMessage(message) {
+            const messageElement = document.createElement('div');
+            messageElement.textContent = message;
+            messagesDiv.appendChild(messageElement);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+    </script>
+</body>
+</html>
